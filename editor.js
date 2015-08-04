@@ -178,7 +178,6 @@
     this.currentEdge = null;
   }
 
-  //for updating the pane when you change the edge type
   EdgePanel.prototype.decidePane = function(panel) {
     return(function() {
       if (panel.edgeTypePanel.val() == "Scheduling") {
@@ -414,8 +413,12 @@
 
     container.append(nameSpan).append(deleteAnchor).append(initialValue).append(description);
     deleteAnchor.on('click', function() {
+      $("#global_vars option[value='" + name + "']").remove();
       container.remove();
     });
+
+    var option = $('<option></option').attr('value', name).text(name)
+    $('#global_vars').append(option)
 
     this.globalVariablesUl.append(container);
   }

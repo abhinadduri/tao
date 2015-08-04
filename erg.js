@@ -16,7 +16,8 @@
     this.eventSelect = eventSelect;
     this.edgeSelect = edgeSelect;
 
-    this.run = this.createEvent(75, 75, '', 'Run', {}, 'green', 'true');
+    this.run = this.createEvent(75, 75, 
+              "//do not edit this!\nthis.nodes = $('.node')\nfor (var i = 0; i < this.nodes.length; i++) {\n\tvar text = $(this.nodes[i]).children().text()\n\t$(this.nodes[i]).attr('id', text)\n}\n//your code here", 'Run', {}, 'green', 'true');
 
     this.edgeSource = null;
     this.selectedPartical = null;

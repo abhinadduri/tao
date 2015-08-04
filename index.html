@@ -8,6 +8,8 @@
     <script src="lib/handlebars-v1.3.0.js"></script>
     <script src="lib/underscore.js"></script>
     <script src="lib/FileSaver.js"></script>
+    <script src="lib/bootstrap.js"></script>
+    <script src="lib/Chart.js"></script>
 
     <script src="engine/alea.js"></script>
     <script src="engine/heap.js"></script>
@@ -20,6 +22,7 @@
     <script src="editor.js"></script>
 
     <link href='http://fonts.googleapis.com/css?family=Roboto:400,500,700' rel='stylesheet' type='text/css'>
+    <link rel="stylesheet" href="bootstrap.css" type="text/css" media="screen">
     <link rel="stylesheet" href="tao.css" type="text/css" media="screen">
     <link rel="stylesheet" href="diagram.css" type="text/css" media="screen">
   </head>
@@ -100,6 +103,12 @@
             <span class="title">TIME UNITS</span>
             <input type="text" id="timeUnits"/>
             <br /><br />
+            <span class="title">GRAPHING</span>
+            <span class="instructions">Select one global variable to graph.</span>
+            <select id="global_vars">
+              <option value="no_graph" disabled select>Variables</option>
+            </select>
+            <br /><br />
             <span class="title">GLOBAL VARIABLES</span>
             <ul data-templateId="globalVariables"></ul>
             <span class="instructions">To add a global variable, enter a name for the variable below and hit enter to add it to the list.</span>
@@ -135,6 +144,23 @@
         </li>
       </ul>
     </div>
+</div>
+<div class="bootstrap">
+  <div class="modal fade bs-example-modal-lg" id="chartModal" tabindex="-1" role="dialog" aria-labelledby="chartModalLabel" aria-hidden="true">
+  <div class="modal-dialog modal-lg">
+      <div class="modal-content">
+          <div class="modal-header">
+              <button type="button" class="close" data-dismiss="modal"><span aria-hidden="true">&times;</span><span class="sr-only">Close</span></button>
+              <h4 class="modal-title" id="chartModalLabel" style="text-align: center">Graph</h4>
+          </div>
+          <div class="modal-body">
+          </div>
+          <div class="modal-footer">
+              <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+          </div>
+      </div>
+  </div>
+</div>
 <input id="file_input" style="display: none;" type="file"></input>
  <script id="erg" type="text/x-handlebars-template">
 function {{name}} (
@@ -143,14 +169,11 @@ function {{name}} (
   var self = this;
   var globals = this;
   console.log('Running: {{name}}');
-
   {{! variables}}
   {{~#each variables}}
   globals.{{name}} = {{name}};
   {{~/each}}
   {{! functions}}
-
- 
 
   {{#each events}}
   self.{{name}} = function(scheduler, params, scheduledByPending) {
@@ -167,7 +190,8 @@ function {{name}} (
     scheduler.schedulePending("{{#getEvent ../../events target}}{{name}}{{/getEvent}}", this, {{delay}}, {{priority}}, self.{{#getEvent ../../events target}}{{name}}{{/getEvent}}, {{#parameters parameters}}{{{params}}}{{/parameters}}, {{#getEvent ../../events target}}{{trace}}{{/getEvent}}, "{{{condition}}}", function(globals) { return {{{condition}}}; });
     {{/getPendingEdges}}
 
-    return this.name;
+    var graph_var = $('#global_vars option:selected').val()
+    return (graph_var == "no_graph") ? null : globals[graph_var]
   }
 
   {{/each}}

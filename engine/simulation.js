@@ -35,16 +35,26 @@ SimulationGenerator.prototype.renderSimulation = function () {
     }
   });
 
+<<<<<<< HEAD
+  Handlebars.registerHelper('getEdges', function (edges, eventName, options) {
+    correctEdges = getObjects(edges, "source", eventName);
+    var out = "";
+    for (var i = 0; i < correctEdges.length; i++) {
+      out += options.fn(correctEdges[i]);
+=======
   Handlebars.registerHelper('getSchedulingEdges', function (edges, eventName, options) {
     correctEdges = getObjects(edges, "source", eventName);
     var out = "";
     for (var i = 0; i < correctEdges.length; i++) {
       if (correctEdges[i].edgeType == "Scheduling")
         out += options.fn(correctEdges[i]);
+>>>>>>> graphing added, jquery node selectors added
     }
     return out;
   });
 
+<<<<<<< HEAD
+=======
   Handlebars.registerHelper('getPendingEdges', function (edges, eventName, options) {
     correctEdges = getObjects(edges, "source", eventName);
     var out = "";
@@ -67,6 +77,7 @@ SimulationGenerator.prototype.renderSimulation = function () {
     });
   });
 
+>>>>>>> graphing added, jquery node selectors added
   Handlebars.registerHelper('getEvent', function (events, targetEventName, options) {
     correctEvent = getObjects(events, "name", targetEventName);
     return options.fn(correctEvent[0]);

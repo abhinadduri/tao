@@ -113,22 +113,29 @@ function Engine(eventRanker) {
 
 Engine.prototype.execute = function(scenario, duration) {
   var scheduler = new Scheduler(this.eventRanker);
+  var graph_data = {}
 
   scenario.Run(scheduler);
 
   while (scheduler.hasNext()) {
     var currentEvent = scheduler.next();
-
+    var data = 0
     if (currentEvent.timestamp > duration) break;
     data = currentEvent.func(scheduler, currentEvent.params, false);
 
+        // var color = $('#' + currentEvent.name).css('background')
+    // $('#' + currentEvent.name).css({'background': 'black'})
+
+    // setTimeout(function() {
     if (currentEvent.parentEvent.name == "Run") {
-      console.log(currentEvent.name + ' ' + currentEvent._id + ' by Run 0');
+    console.log(currentEvent.name + ' ' + currentEvent._id + ' by Run 0');
     } else if (currentEvent.parentEvent && currentEvent.trace) {
-      console.log(currentEvent.name + ' ' + currentEvent._id + ' by ' + currentEvent.parentEvent.name
-       + ' ' + currentEvent.parentEvent._id + ' at time '
-      + scheduler.getClock());
+    console.log(currentEvent.name + ' ' + currentEvent._id + ' by ' + currentEvent.parentEvent.name
+     + ' ' + currentEvent.parentEvent._id + ' at time '
+    + scheduler.getClock());
     }
+    // $('#' + currentEvent.name).css({'background': color})
+    // }, 50)
 
     //pending events
     for (var e in scheduler.pendingEvents) {
@@ -149,5 +156,9 @@ Engine.prototype.execute = function(scenario, duration) {
         delete scheduler.pendingEvents[e];
       }
     }
+
+    graph_data[scheduler.getClock()] = data
   }
+
+  return graph_data
 }

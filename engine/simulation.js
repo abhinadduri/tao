@@ -35,24 +35,15 @@ SimulationGenerator.prototype.renderSimulation = function () {
     }
   });
 
-
-  Handlebars.registerHelper('getEdges', function (edges, eventName, options) {
-    correctEdges = getObjects(edges, "source", eventName);
-    var out = "";
-    for (var i = 0; i < correctEdges.length; i++) {
-      out += options.fn(correctEdges[i]);
-
   Handlebars.registerHelper('getSchedulingEdges', function (edges, eventName, options) {
     correctEdges = getObjects(edges, "source", eventName);
     var out = "";
     for (var i = 0; i < correctEdges.length; i++) {
       if (correctEdges[i].edgeType == "Scheduling")
         out += options.fn(correctEdges[i]);
-
     }
     return out;
   });
-
 
   Handlebars.registerHelper('getPendingEdges', function (edges, eventName, options) {
     correctEdges = getObjects(edges, "source", eventName);
@@ -75,7 +66,6 @@ SimulationGenerator.prototype.renderSimulation = function () {
       'length': list.length
     });
   });
-
 
   Handlebars.registerHelper('getEvent', function (events, targetEventName, options) {
     correctEvent = getObjects(events, "name", targetEventName);

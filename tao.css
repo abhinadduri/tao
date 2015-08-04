@@ -165,11 +165,22 @@ a {
 .editor .variables {
   background-color: rgb(228, 231, 232);
   padding: 5px 15px;
+<<<<<<< HEAD
   height: 90px;
+=======
+  height: 140px;
+>>>>>>> graphing added, jquery node selectors added
   line-height: 30px;
   margin-bottom: 2px;
 }
 
+<<<<<<< HEAD
+=======
+.editor .paramDescription {
+  margin-top: 12px;
+}
+
+>>>>>>> graphing added, jquery node selectors added
 .editor ul li {
   background-color: rgb(228, 231, 232);
   padding: 5px 15px;

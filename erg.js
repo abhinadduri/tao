@@ -16,7 +16,8 @@
     this.eventSelect = eventSelect;
     this.edgeSelect = edgeSelect;
 
-    this.run = this.createEvent(75, 75, '', 'Run', {}, 'green', 'true');
+    this.run = this.createEvent(75, 75, 
+              "//do not edit this!\nthis.nodes = $('.node')\nfor (var i = 0; i < this.nodes.length; i++) {\n\tvar text = $(this.nodes[i]).children().text()\n\t$(this.nodes[i]).attr('id', text)\n}\n//your code here", 'Run', {}, 'green', 'true');
 
     this.edgeSource = null;
     this.selectedPartical = null;
@@ -96,16 +97,17 @@
     return true;
   }
 
-  EventRelationGraph.prototype.createEdge = function(source, target, delay, condition, priority, parameters) {
+  EventRelationGraph.prototype.createEdge = function(source, target, delay, condition, priority, parameters, edgeType) {
     var edge = Segment.build({
       h: 2,
       stage: this.stage,
       origin: source,
       destination: target,
-      delay: delay,
       condition: condition,
+      delay: delay,
       priority: priority,
       parameters: parameters,
+      edgeType: edgeType,
       events: {
         click: this.edgeClick(this)
       }
@@ -116,7 +118,7 @@
     return edge;
   }
 
-  EventRelationGraph.prototype.createEdgeByName = function(source, target, delay, condition, priority, parameters) {
+  EventRelationGraph.prototype.createEdgeByName = function(source, target, delay, condition, priority, parameters, edgeType) {
     var objSource = null;
     var objDestination = null;
     for (var event in this.events) {
@@ -132,10 +134,11 @@
       stage: this.stage,
       origin: objSource,
       destination: objDestination,
-      delay: delay,
       condition: condition,
+      delay: delay,
       priority: priority,
       parameters: parameters,
+      edgeType: edgeType,
       events: {
         click: this.edgeClick(this)
       }
@@ -175,7 +178,7 @@
       if (e.shiftKey) {
         if (erg.edgeSource) {
           // Create an edge using a previous source.
-          erg.createEdge(erg.edgeSource, node, 0, 'true', 0, []);
+          erg.createEdge(erg.edgeSource, node, 0, 'true', 0, {}, 'Scheduling');
           erg.clearContext();
         } else {
           // Set a node to be the source for edge creation.
@@ -229,7 +232,7 @@
     arr.each(function() {
       json.variables.push({
         'name': $(this).find('.variableName').text(),
-        'description': ''
+        'description': $(this).find('.paramDescription').val()
       });
     });
 
@@ -240,7 +243,8 @@
         'delay': this.edges[edge].delay,
         'condition': this.edges[edge].condition,
         'parameters': this.edges[edge].parameters,
-        'priority': this.edges[edge].priority
+        'priority': this.edges[edge].priority,
+        'edgeType': this.edges[edge].edgeType
       });
     }
 

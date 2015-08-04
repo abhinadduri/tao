@@ -14,6 +14,7 @@
     run = $('#run');
     globals = $('#globals');
     open = $('#open');
+    chart = $('#chartModal');
 
     editor = $('.editor', contents);
     footer = $('.footer', contents);
@@ -33,16 +34,49 @@
 
       var params = [];
       var arr = $('.variables');
+
       arr.each(function() {
         params.push(eval('(' + $(this).find('.initialVal').val() + ')'));
       });
 
-      params.unshift(0);
+      var toRun = function(p){
+        var s = function() { Simulation.apply(this, p) };
+        s.prototype = this.prototype;
+        return new s();
+      }(params);
 
-
-      var toRun = new(Simulation.bind.apply(Simulation, params))();
       var eng = new Engine(lifoRank);
-      eng.execute(toRun, parseInt($('#timeUnits').val()));
+
+      graph_data = eng.execute(toRun, parseInt($('#timeUnits').val()));
+      var keys = []
+      var values = []
+
+      for (key in graph_data) {
+        keys.push(key)
+        values.push(graph_data[key])
+      }
+
+      $('#chartModal').on('shown.bs.modal', function(event) {
+        
+        var canvas = $(this).find('.modal-body canvas');
+        
+        // Chart initialisieren
+        var ctx = canvas[0].getContext("2d");
+        var chart = new Chart(ctx).Line({
+          labels: keys,
+          datasets: [{
+            fillColor: "rgba(190,144,212,0.2)",
+            strokeColor: "rgba(190,144,212,1)",
+            pointColor: "rgba(190,144,212,1)",
+            pointStrokeColor: "#fff",
+            pointHighlightFill: "#fff",
+            pointHighlightStroke: "rgba(220,220,220,1)",
+            data: values
+          }]
+        }, {});
+      });
+
+    $('#chartModal').modal()
     });
 
     globals.click(function(e) {
@@ -78,6 +112,9 @@
       }
     });
 
+
+
+
     window.onload = function() {
       var fileInput = document.getElementById('file_input');
 
@@ -91,6 +128,9 @@
           reader.onload = function(e) {
             var json = eval('(' + reader.result + ')');
             erg.deleteAll();
+            $('#global_vars').children().remove()
+            var default_option = $('<option disabled select></option>').attr('value', 'no_graph').text('Variables')
+            $('#global_vars').append(default_option)
             globalPanel.globalVariablesUl.empty();
 
             //load name
@@ -99,22 +139,31 @@
             //put in a time so that a poor user won't have to encounter infinite loops
             $('#timeUnits').val('0');
 
-            //get the user instructions for the simulation and alert it
+            //get the user instructions for the simulation
             $('#simulationDescription').val(json.description);
 
             //load variables
             for (var variable in json.variables) {
+              var currentVar = json.variables[variable];
               var container = $('<li></li>').addClass('variables');
-              var nameSpan = $('<span></span>').addClass('code').addClass('variableName').text(json.variables[variable].name);
+
+              var nameSpan = $('<span></span>').addClass('code').addClass('variableName').text(currentVar.name);
               var deleteAnchor = $('<a></a>').addClass('right').attr('href', '#').text('✕');
               var initialValue = $('<input></input>').attr('placeholder', 'Initial Value').addClass('initialVal');
+              var description = $('<input></input>').attr('placeholder', 'Description').addClass('paramDescription').val(currentVar.description);
 
-              container.append(nameSpan).append(deleteAnchor).append(initialValue);
-              deleteAnchor.on('click', function() {
-                container.remove();
-              });
+              container.append(nameSpan).append(deleteAnchor).append(initialValue).append(description);
+              deleteAnchor.on('click', (function(c) { 
+                return (function() {
+                  $("#global_vars option[value='" + currentVar.name + "']").remove();
+                  c.remove();
+                })
+              })(container));
 
               globalPanel.globalVariablesUl.append(container);
+
+              var option = $('<option></option').attr('value', currentVar.name).text(currentVar.name)
+              $('#global_vars').append(option)
             }
 
             //load events
@@ -132,7 +181,8 @@
             //load edges
             for (edge in json.edges) {
               var e = json.edges[edge];
-              erg.createEdgeByName(e.source, e.target, e.delay, e.condition, e.priority, e.parameters);
+              var edgeType = e.edgeType || "Scheduling";
+              erg.createEdgeByName(e.source, e.target, e.delay, e.condition, e.priority, e.parameters, edgeType);
             }
 
           }
@@ -156,7 +206,6 @@
   function edgeSelected(edge) {
     clearContent();
     edgePanel.loadMultipleEdges(erg.getEdgeByNodes(edge.origin.title, edge.destination.title), erg);
-    // edgePanel.load(edge);
     contents.show();
   }
 
@@ -165,6 +214,8 @@
     eventPanel.load(node);
     contents.show();
   }
+
+
 
   initialize();
 

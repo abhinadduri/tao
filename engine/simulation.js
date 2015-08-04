@@ -35,15 +35,49 @@ SimulationGenerator.prototype.renderSimulation = function () {
     }
   });
 
+<<<<<<< HEAD
   Handlebars.registerHelper('getEdges', function (edges, eventName, options) {
     correctEdges = getObjects(edges, "source", eventName);
     var out = "";
     for (var i = 0; i < correctEdges.length; i++) {
       out += options.fn(correctEdges[i]);
+=======
+  Handlebars.registerHelper('getSchedulingEdges', function (edges, eventName, options) {
+    correctEdges = getObjects(edges, "source", eventName);
+    var out = "";
+    for (var i = 0; i < correctEdges.length; i++) {
+      if (correctEdges[i].edgeType == "Scheduling")
+        out += options.fn(correctEdges[i]);
+>>>>>>> graphing added, jquery node selectors added
     }
     return out;
   });
 
+<<<<<<< HEAD
+=======
+  Handlebars.registerHelper('getPendingEdges', function (edges, eventName, options) {
+    correctEdges = getObjects(edges, "source", eventName);
+    var out = "";
+    for (var i = 0; i < correctEdges.length; i++) {
+      if (correctEdges[i].edgeType == "Pending")
+        out += options.fn(correctEdges[i]);
+    }
+    return out;
+  });
+
+  Handlebars.registerHelper('pendingEdgeLength', function (edges, eventName, options) {
+    correctEdges = getObjects(edges, "source", eventName);
+    var list = [];
+    for (var i = 0; i < correctEdges.length; i++) {
+      if (correctEdges[i].edgeType == "Pending")
+        list.push(options.fn(correctEdges[i]));
+    }
+    return options.fn({
+      'length': list.length
+    });
+  });
+
+>>>>>>> graphing added, jquery node selectors added
   Handlebars.registerHelper('getEvent', function (events, targetEventName, options) {
     correctEvent = getObjects(events, "name", targetEventName);
     return options.fn(correctEvent[0]);

@@ -186,8 +186,7 @@
       }
     });
 
-<<<<<<< HEAD
-=======
+
     Handlebars.registerHelper('tracedEvents', function(events, options) {
       var eventsTraced = "";
       var allEvents = 0;
@@ -211,7 +210,7 @@
       }
     });
 
->>>>>>> graphing added, jquery node selectors added
+
     Handlebars.registerHelper('initialValues', function(options) {
       //can only generate sigma file if variables are all ints.
       var toReturn = "";

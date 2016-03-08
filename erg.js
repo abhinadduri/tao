@@ -200,7 +200,6 @@
   EventRelationGraph.prototype.edgeClick = function(erg) {
     return (function(e) {
       var edge = this;
-
       erg.clearContext();
       erg.selectedPartical = edge;
       erg.selectedPartical.setTheme(Segment.themes.red);

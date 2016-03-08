@@ -60,7 +60,7 @@
         
         var canvas = $(this).find('.modal-body canvas');
         
-        // Chart initialisieren
+        // Chart initialization
         var ctx = canvas[0].getContext("2d");
         var chart = new Chart(ctx).Line({
           labels: keys,
@@ -74,11 +74,14 @@
             data: values
           }]
         }, {});
+        
       });
 
     $('#chartModal').modal()
     });
-
+  
+    
+  
     globals.click(function(e) {
       erg.clearContext();
       clearContent();

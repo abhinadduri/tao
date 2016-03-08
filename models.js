@@ -278,10 +278,8 @@
     opts.type = 'segment';
     Particle.prototype.constructor.call(this, opts);
 
-<<<<<<< HEAD
-=======
     this.edgeType = opts.edgeType;
->>>>>>> graphing added, jquery node selectors added
+
     this.delay = opts.delay;
     this.condition = opts.condition;
     this.priority = opts.priority;
@@ -425,10 +423,7 @@
     } else {
       segment = new LineSegment(opts);
     }
-<<<<<<< HEAD
 
-=======
->>>>>>> graphing added, jquery node selectors added
     return segment;
   }
 
